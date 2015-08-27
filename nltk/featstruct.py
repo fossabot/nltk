@@ -1988,17 +1988,17 @@ class FeatStructReader(object):
             self._error(s, 'end of string', position)
         return value
 
-    _START_FSTRUCT_RE = re.compile(ur'\s*(?:\((\d+)\)\s*)?(\??[\w-]+)?(\[)')
-    _END_FSTRUCT_RE = re.compile(ur'\s*]\s*')
-    _SLASH_RE = re.compile(ur'/')
-    _FEATURE_NAME_RE = re.compile(ur'\s*([+-]?)([^\s\(\)<>"\'\-=\[\],]+)\s*')
-    _REENTRANCE_RE = re.compile(ur'\s*->\s*')
-    _TARGET_RE = re.compile(ur'\s*\((\d+)\)\s*')
-    _ASSIGN_RE = re.compile(ur'\s*=\s*')
-    _COMMA_RE = re.compile(ur'\s*,\s*')
-    _BARE_PREFIX_RE = re.compile(ur'\s*(?:\((\d+)\)\s*)?(\??[\w-]+\s*)()')
+    _START_FSTRUCT_RE = re.compile(r'\s*(?:\((\d+)\)\s*)?(\??[\w-]+)?(\[)')
+    _END_FSTRUCT_RE = re.compile(r'\s*]\s*')
+    _SLASH_RE = re.compile(r'/')
+    _FEATURE_NAME_RE = re.compile(r'\s*([+-]?)([^\s\(\)<>"\'\-=\[\],]+)\s*')
+    _REENTRANCE_RE = re.compile(r'\s*->\s*')
+    _TARGET_RE = re.compile(r'\s*\((\d+)\)\s*')
+    _ASSIGN_RE = re.compile(r'\s*=\s*')
+    _COMMA_RE = re.compile(r'\s*,\s*')
+    _BARE_PREFIX_RE = re.compile(r'\s*(?:\((\d+)\)\s*)?(\??[\w-]+\s*)()')
     # This one is used to distinguish fdicts from flists:
-    _START_FDICT_RE = re.compile(ur'(%s)|(%s\s*(%s\s*(=|->)|[+-]%s|\]))' % (
+    _START_FDICT_RE = re.compile(r'(%s)|(%s\s*(%s\s*(=|->)|[+-]%s|\]))' % (
         _BARE_PREFIX_RE.pattern, _START_FSTRUCT_RE.pattern,
         _FEATURE_NAME_RE.pattern, _FEATURE_NAME_RE.pattern))
 
