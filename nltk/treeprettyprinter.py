@@ -24,6 +24,7 @@ from nltk.util import slice_bounds, OrderedDict
 from nltk.compat import string_types, python_2_unicode_compatible, unicode_repr
 from nltk.internals import raise_unorderable_types
 from nltk.tree import Tree
+from nltk.grammar import FeatStructNonterminal
 
 import re
 import sys
@@ -33,6 +34,9 @@ from collections import defaultdict
 from operator import itemgetter
 from itertools import chain, islice
 
+# MDJ 7/24/15
+# Make capable of text pretty printing east-asian characters
+import unicodedata
 
 ANSICOLOR = {
     'black': 30,
@@ -348,6 +352,16 @@ class TreePrettyPrinter(object):
             lst[splitl:splitl + len(x)] = list(x)
             return ''.join(lst)
 
+        def screenlen(string):
+          return sum(1+(unicodedata.east_asian_width(c) in "WF") for c in unicode(string))
+        def screencenter(string,width):
+          # The number of characters that will be taken up by 
+          # full-width printing already, so don't require additional
+          # spacing
+          chompedchars = screenlen(string) - len(string)
+          #print("String:(" + string + ") needs to lose " + str(chompedchars) + " from width " + str(width))
+          return string.center(width - chompedchars)
+
         result = []
         matrix = defaultdict(dict)
         maxnodewith = defaultdict(lambda: 3)
@@ -366,13 +380,19 @@ class TreePrettyPrinter(object):
             maxcol = max(maxcol, column)
             label = (self.nodes[a].label() if isinstance(self.nodes[a], Tree)
                      else self.nodes[a])
+            
+            #MDJ 07/28/15
+            if isinstance(label,FeatStructNonterminal):
+              label = label.__repr__()
+
             if abbreviate and len(label) > abbreviate:
                 label = label[:abbreviate] + ellipsis
             if maxwidth and len(label) > maxwidth:
                 label = wrapre.sub(r'\1\n', label).strip()
             label = label.split('\n')
             maxnodeheight[row] = max(maxnodeheight[row], len(label))
-            maxnodewith[column] = max(maxnodewith[column], max(map(len, label)))
+            maxnodewith[column] = max(maxnodewith[column], max(map(screenlen, label)))
+            #print("Max nodewith: " + str(maxnodewith))
             labels[a] = label
             if a not in self.edges:
                 continue  # e.g., root
@@ -411,9 +431,16 @@ class TreePrettyPrinter(object):
                             branchrow[i] = line.center(maxnodewith[i], horzline)
                     else:  # if n and n in minchildcol:
                         branchrow[col] = crosscell(branchrow[col])
-                text = [a.center(maxnodewith[col]) for a in text]
+                text = [screencenter(a,maxnodewith[col]) for a in text]
+                #print("Text is:"+str(text))
                 color = nodecolor if isinstance(node, Tree) else leafcolor
-                if isinstance(node, Tree) and node.label().startswith('-'):
+                if isinstance(node, Tree):
+                  # MDJ 07/26/15
+                  # Make it possible to pretty print grammar trees
+                  if isinstance(node.label(),FeatStructNonterminal):
+                    if node.label().__repr__().startswith('-'):
+                      color = funccolor
+                  elif node.label().startswith('-'):
                     color = funccolor
                 if html:
                     text = [escape(a) for a in text]
