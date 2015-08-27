@@ -325,7 +325,7 @@ class Production(object):
 
         :rtype: str
         """
-        return '%s' % self
+        return '%s'.decode('utf8') % self
 
     def __eq__(self, other):
         """
@@ -1269,6 +1269,7 @@ def read_grammar(input, nonterm_parser, probabilistic=False, encoding=None):
                 # expand out the disjunctions on the RHS
                 productions += _read_production(line, nonterm_parser, probabilistic)
         except ValueError as e:
+            print("Error: " + repr(e))
             raise ValueError('Unable to parse line %s: %s\n%s' %
                              (linenum+1, line, e))
 

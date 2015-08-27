@@ -6,6 +6,7 @@
 #         Steven Bird <stevenbird1@gmail.com>
 # URL: <http://nltk.sourceforge.net>
 # For license information, see LICENSE.TXT
+# -*- coding: utf-8 -*-
 
 """
 Basic data classes for representing feature structures, and for
@@ -770,14 +771,15 @@ class FeatDict(FeatStruct, dict):
             elif isinstance(fval, Expression):
                 segments.append('%s=<%s>' % (fname, fval))
             elif not isinstance(fval, FeatStruct):
-                segments.append('%s=%s' % (fname, unicode_repr(fval)))
+                #segments.append('%s=%s' % (fname, unicode_repr(fval)))
+                segments.append(u'%s=%s' % (fname, unicode_repr(fval)))
             else:
                 fval_repr = fval._repr(reentrances, reentrance_ids)
                 segments.append('%s=%s' % (fname, fval_repr))
         # If it's reentrant, then add on an identifier tag.
         if reentrances[id(self)]:
             prefix = '(%s)%s' % (reentrance_ids[id(self)], prefix)
-        return '%s[%s]%s' % (prefix, ', '.join(segments), suffix)
+        return u'%s[%s]%s' % (prefix, ', '.join(segments), suffix)
 
     def _str(self, reentrances, reentrance_ids):
         """
@@ -1986,17 +1988,17 @@ class FeatStructReader(object):
             self._error(s, 'end of string', position)
         return value
 
-    _START_FSTRUCT_RE = re.compile(r'\s*(?:\((\d+)\)\s*)?(\??[\w-]+)?(\[)')
-    _END_FSTRUCT_RE = re.compile(r'\s*]\s*')
-    _SLASH_RE = re.compile(r'/')
-    _FEATURE_NAME_RE = re.compile(r'\s*([+-]?)([^\s\(\)<>"\'\-=\[\],]+)\s*')
-    _REENTRANCE_RE = re.compile(r'\s*->\s*')
-    _TARGET_RE = re.compile(r'\s*\((\d+)\)\s*')
-    _ASSIGN_RE = re.compile(r'\s*=\s*')
-    _COMMA_RE = re.compile(r'\s*,\s*')
-    _BARE_PREFIX_RE = re.compile(r'\s*(?:\((\d+)\)\s*)?(\??[\w-]+\s*)()')
+    _START_FSTRUCT_RE = re.compile(ur'\s*(?:\((\d+)\)\s*)?(\??[\w-]+)?(\[)')
+    _END_FSTRUCT_RE = re.compile(ur'\s*]\s*')
+    _SLASH_RE = re.compile(ur'/')
+    _FEATURE_NAME_RE = re.compile(ur'\s*([+-]?)([^\s\(\)<>"\'\-=\[\],]+)\s*')
+    _REENTRANCE_RE = re.compile(ur'\s*->\s*')
+    _TARGET_RE = re.compile(ur'\s*\((\d+)\)\s*')
+    _ASSIGN_RE = re.compile(ur'\s*=\s*')
+    _COMMA_RE = re.compile(ur'\s*,\s*')
+    _BARE_PREFIX_RE = re.compile(ur'\s*(?:\((\d+)\)\s*)?(\??[\w-]+\s*)()')
     # This one is used to distinguish fdicts from flists:
-    _START_FDICT_RE = re.compile(r'(%s)|(%s\s*(%s\s*(=|->)|[+-]%s|\]))' % (
+    _START_FDICT_RE = re.compile(ur'(%s)|(%s\s*(%s\s*(=|->)|[+-]%s|\]))' % (
         _BARE_PREFIX_RE.pattern, _START_FSTRUCT_RE.pattern,
         _FEATURE_NAME_RE.pattern, _FEATURE_NAME_RE.pattern))
 
@@ -2034,7 +2036,6 @@ class FeatStructReader(object):
             if not match:
                 raise ValueError('open bracket or identifier', position)
         position = match.end()
-
         # If there as an identifier, record it.
         if match.group(1):
             identifier = match.group(1)
