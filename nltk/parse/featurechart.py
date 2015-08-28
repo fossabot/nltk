@@ -365,6 +365,7 @@ class FeatureTopDownPredictRule(CachedTopDownPredictRule):
 class FeatureBottomUpPredictRule(BottomUpPredictRule):
     def apply(self, chart, grammar, edge):
         if edge.is_incomplete(): return
+        #print("Attempting to find productions with first symbol {}".format(repr(edge.lhs())))
         for prod in grammar.productions(rhs=edge.lhs()):
             if isinstance(edge, FeatureTreeEdge):
                 _next = prod.rhs()[0]
@@ -374,11 +375,35 @@ class FeatureBottomUpPredictRule(BottomUpPredictRule):
             if chart.insert(new_edge, ()):
                 yield new_edge
 
+def nodesHash(node_list):
+  hsh_items = []
+  for s in node_list:
+    if type(s) is FeatStructNonterminal:
+      hsh_items.append(s[TYPE])
+    elif type(s) is Tree:
+      hsh_items.append(s.label()[TYPE])
+    else:
+      hsh_items.append(s)
+  return " ".join(hsh_items)
+
 class FeatureBottomUpPredictCombineRule(BottomUpPredictCombineRule):
     def apply(self, chart, grammar, edge):
         if edge.is_incomplete(): return
         found = edge.lhs()
-        for prod in grammar.productions(rhs=found):
+        # MDJ 08/26/15
+        if type(found) is not FeatStructNonterminal:
+          #print(repr(edge._index))
+          # This is a terminal symbol, so get all the remaining symbols
+          all_symbols = chart._tokens[edge._index:]
+          prods = []
+          for i in range(1,len(all_symbols)+1):
+            sub = all_symbols[:i]
+            hsh = nodesHash(sub)
+            if grammar._full_index.has_key(hsh):
+              prods.extend(grammar._full_index[hsh])
+        else:
+          prods = grammar.productions(rhs=found)
+        for prod in prods:
             bindings = {}
             if isinstance(edge, FeatureTreeEdge):
                 _next = prod.rhs()[0]
