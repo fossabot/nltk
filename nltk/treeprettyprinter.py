@@ -351,9 +351,10 @@ class TreePrettyPrinter(object):
             lst = list(cur)
             lst[splitl:splitl + len(x)] = list(x)
             return ''.join(lst)
-
+        
+        #MDJ 08/26/15 for python3
         def screenlen(string):
-          return sum(1+(unicodedata.east_asian_width(c) in "WF") for c in unicode(string))
+          return sum(1+(unicodedata.east_asian_width(c) in "WF") for c in string)
         def screencenter(string,width):
           # The number of characters that will be taken up by 
           # full-width printing already, so don't require additional

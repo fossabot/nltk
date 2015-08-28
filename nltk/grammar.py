@@ -325,7 +325,7 @@ class Production(object):
 
         :rtype: str
         """
-        return '%s'.decode('utf8') % self
+        return '%s' % self
 
     def __eq__(self, other):
         """

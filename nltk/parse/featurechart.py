@@ -399,7 +399,7 @@ class FeatureBottomUpPredictCombineRule(BottomUpPredictCombineRule):
           for i in range(1,len(all_symbols)+1):
             sub = all_symbols[:i]
             hsh = nodesHash(sub)
-            if grammar._full_index.has_key(hsh):
+            if hsh in grammar._full_index:
               prods.extend(grammar._full_index[hsh])
         else:
           prods = grammar.productions(rhs=found)
