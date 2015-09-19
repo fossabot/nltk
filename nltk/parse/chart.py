@@ -687,6 +687,17 @@ class Chart(object):
 
             # For each combination of children, add a tree.
             for children in itertools.product(*child_choices):
+                # MDJ 2015-09-19
+                # Some grammars will have symbols that don't change the parse
+                # but are a useful annotation in the resultant tree. This 
+                # information needs to be transferred from the rule to the
+                # tree itself
+                #
+                # This is a complete hack and will break trees of any other
+                # type, but it's a quick hack so whatever.
+                for (tree,symbol) in zip(children,edge.rhs()):
+                  if isinstance(tree,tree_class): 
+                    tree.set_label(tree.label().unify(symbol))
                 trees.append(tree_class(lhs, children))
 
         # If the edge is incomplete, then extend it with "partial trees":
