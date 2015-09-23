@@ -695,10 +695,15 @@ class Chart(object):
                 #
                 # This is a complete hack and will break trees of any other
                 # type, but it's a quick hack so whatever.
+                new_children = []
                 for (tree,symbol) in zip(children,edge.rhs()):
                   if isinstance(tree,tree_class): 
-                    tree.set_label(tree.label().unify(symbol))
-                trees.append(tree_class(lhs, children))
+                    new_child = tree.copy(deep=True)
+                    new_child.set_label(tree.label().unify(symbol))
+                  else:
+                    new_child = tree
+                  new_children.append(new_child)
+                trees.append(tree_class(lhs, new_children))
 
         # If the edge is incomplete, then extend it with "partial trees":
         if edge.is_incomplete():
