@@ -409,11 +409,6 @@ class FeatureBottomUpPredictCombineRule(BottomUpPredictCombineRule):
                 _next = prod.rhs()[0]
                 if not is_nonterminal(_next): continue
 
-                # MDJ 09/28/15
-                # Don't allow sentences to start from the middle of the tokens
-                if prod.lhs()[TYPE] == grammar.start()[TYPE] and edge.start() != 0:
-                  continue
-
                 # We rename vars here, because we don't want variables
                 # from the two different productions to match.
                 used_vars = find_variables((prod.lhs(),) + prod.rhs(),
