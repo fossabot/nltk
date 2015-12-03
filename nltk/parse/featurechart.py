@@ -20,7 +20,7 @@ from nltk.tree import Tree
 from nltk.grammar import (Nonterminal, Production, CFG,
                           FeatStructNonterminal, is_nonterminal,
                           is_terminal)
-from nltk.parse.chart import (TreeEdge, Chart, ChartParser, EdgeI, LeafEdge,
+from nltk.parse.chart import (TreeEdge, Chart, ChartParser, EdgeI,
                               FundamentalRule, LeafInitRule,
                               EmptyPredictRule, BottomUpPredictRule,
                               SingleEdgeFundamentalRule,
@@ -391,7 +391,7 @@ class FeatureBottomUpPredictCombineRule(BottomUpPredictCombineRule):
         if edge.is_incomplete(): return
         found = edge.lhs()
         # MDJ 08/26/15
-        if type(found) is not FeatStructNonterminal and isinstance(edge,LeafEdge):
+        if type(found) is not FeatStructNonterminal:
           #print(repr(edge._index))
           # This is a terminal symbol, so get all the remaining symbols
           all_symbols = chart._tokens[edge._index:]
