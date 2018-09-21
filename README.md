@@ -1,4 +1,6 @@
 # Natural Language Toolkit (NLTK)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fdssrt%2Fnltk.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fdssrt%2Fnltk?ref=badge_shield)
+
 
 NLTK -- the Natural Language Toolkit -- is a suite of open source Python
 modules, data sets and tutorials supporting research and development in Natural
@@ -46,3 +48,6 @@ For license information, see [LICENSE.txt](LICENSE.txt).
 - NLTK corpora are provided under the terms given in the README file for each
   corpus; all are redistributable, and available for non-commercial use.
 - NLTK may be freely redistributed, subject to the provisions of these licenses.
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fdssrt%2Fnltk.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fdssrt%2Fnltk?ref=badge_large)
